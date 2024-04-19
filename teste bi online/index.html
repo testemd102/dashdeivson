@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="styles.css">
+<title>Login</title>
+
+</head>
+<body>
+
+<div id="login-container">
+    <h2>Login</h2>
+    <form id="login-form" onsubmit="return validateLogin()">
+        <input type="text" id="email" name="email" placeholder="Email" required>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+    </form>
+    <p id="error-msg" style="color: red; display: none;">Usuário ou senha inválidos.</p>
+</div>
+
+
+<script>
+    var SESSION_DURATION = 48 * 60 * 60 * 1000; // 48 horas em milissegundos
+    var users = [
+        { email: "deivson.oliveira@qualificarti.com.br", passwordHash: "202cb962ac59075b964b07152d234b70" }, // hash MD5 da senha "123"
+        { email: "kiluatop1@gmail.com", passwordHash: "e10adc3949ba59abbe56e057f20f883e" }  // hash MD5 da senha "123456"
+    ];
+
+    function validateLogin() {
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        var passwordHash = md5(password);
+
+        for (var i = 0; i < users.length; i++) {
+            if (email === users[i].email && passwordHash === users[i].passwordHash) {
+                localStorage.setItem('loggedInTime', Date.now());
+                window.location.href = "1.html";
+                return false;
+            }
+        }
+
+        document.getElementById("error-msg").style.display = "block";
+        return false;
+    }
+
+    function isSessionExpired() {
+        var loggedInTime = localStorage.getItem('loggedInTime');
+        if (!loggedInTime) return true; // Se não houver um tempo de login registrado, a sessão é considerada expirada
+        var currentTime = Date.now();
+        return (currentTime - loggedInTime) > SESSION_DURATION;
+    }
+
+    if (isSessionExpired()) {
+        localStorage.removeItem('loggedInTime'); // Limpar o tempo de login
+    } else {
+        window.location.href = "1.html"; // Redirecionar para a página principal se a sessão ainda estiver válida
+    }
+
+    function md5(plain) {
+        return CryptoJS.MD5(plain).toString();
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+</body>
+</html>

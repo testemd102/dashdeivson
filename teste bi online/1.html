@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+       
+    </style>
+    <title>Link Automático</title>
+</head>
+<body>
+<div class="container">
+    <h1>Relatórios Power BI</h1>
+    <button class="logout-button" onclick="logout()">Sair</button>
+    <div class="dash">
+        <button id="meuBotao">Controle de Faturamento</button>
+        <button id="youtube">YouTube</button>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('loggedInTime');
+            window.location.href = "index.html"; // Redirecionar para a página de login após sair
+        }
+
+        document.getElementById('meuBotao').addEventListener('click', function() {
+            window.location.href = 'https://app.powerbi.com/reportEmbed?reportId=a66114df-c19f-41e9-9617-a4e43f08a641&autoAuth=true&ctid=c13a2f78-e02e-4e73-9eaa-b589046f3776';
+        });
+
+        document.getElementById('youtube').addEventListener('click', function() {
+            window.location.href = 'https://youtube.com';
+        });
+
+        var SESSION_DURATION = 48 * 60 * 60 * 1000; // 48 horas em milissegundos
+
+        function isUserLoggedIn() {
+            var loggedInTime = localStorage.getItem('loggedInTime');
+            if (!loggedInTime) return false; // Se não houver um tempo de login registrado, o usuário não está logado
+            var currentTime = Date.now();
+            return (currentTime - loggedInTime) <= SESSION_DURATION;
+        }
+
+        if (!isUserLoggedIn()) {
+            window.location.href = "index.html"; // Redirecionar para a página de login se o usuário não estiver logado
+        }
+    </script>
+
+     <script src="script.js"></script>
+</div>
+</body>
+</html>
